@@ -1,0 +1,105 @@
+// file: components/NehcLogo.tsx
+import React from 'react';
+
+export default function NehcLogo({ size = 120, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 200 200"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`drop-shadow-md select-none ${className}`}
+    >
+      {/* Outer Golden/Bronze Ring */}
+      <circle cx="100" cy="100" r="94" stroke="#D4AF37" strokeWidth="4" fill="#0A2540" />
+      <circle cx="100" cy="100" r="88" stroke="#FFFFFF" strokeWidth="1.5" fill="none" />
+      
+      {/* Curved Text Path definitions */}
+      <defs>
+        <path id="textPathTop" d="M 24,100 A 76,76 0 0,1 176,100" />
+        <path id="textPathBottom" d="M 176,100 A 76,76 0 0,1 24,100" />
+        <clipPath id="innerCircleClip">
+          <circle cx="100" cy="100" r="64" />
+        </clipPath>
+      </defs>
+
+      {/* Outer Emblem Text */}
+      <text fill="#FFFFFF" fontSize="9.5" fontWeight="bold" letterSpacing="1.2">
+        <textPath href="#textPathTop" startOffset="50%" textAnchor="middle">
+          NORTH EAST HOSPITALITY COUNCIL
+        </textPath>
+      </text>
+      <text fill="#D4AF37" fontSize="9" fontWeight="bold" letterSpacing="1.5">
+        <textPath href="#textPathBottom" startOffset="50%" textAnchor="middle">
+          • GOVT. STYLE EDUCATIONAL PORTAL •
+        </textPath>
+      </text>
+
+      {/* Inner Council Shield Circle */}
+      <g clipPath="url(#innerCircleClip)">
+        {/* Sky Background */}
+        <rect x="36" y="36" width="128" height="128" fill="#EBF3F9" />
+        
+        {/* Mountain Silhouette (representing North East terrain) */}
+        <path d="M30 140 L75 80 L110 120 L155 60 L180 140 Z" fill="#2E5A88" opacity="0.3" />
+        <path d="M50 140 L90 95 L125 130 L165 75 L190 140 Z" fill="#1C3D5A" />
+
+        {/* Wavy River (flowing from the mountains) */}
+        <path
+          d="M 90,115 C 105,125 100,135 110,145 C 115,152 110,162 120,170"
+          fill="none"
+          stroke="#3A82C4"
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 90,115 C 105,125 100,135 110,145 C 115,152 110,162 120,170"
+          fill="none"
+          stroke="#EBF3F9"
+          strokeWidth="1.5"
+          strokeDasharray="4 4"
+        />
+
+        {/* Stylized Map Outline Overlay of North East States (Abstract Golden Ribbon Shape) */}
+        <path
+          d="M 65,70 C 80,65 95,72 105,65 C 115,55 130,55 140,68 C 145,80 135,95 142,105 C 130,105 125,115 115,110 C 100,110 90,95 75,95 C 60,95 58,80 65,70 Z"
+          fill="#4CAF50"
+          fillOpacity="0.25"
+          stroke="#D4AF37"
+          strokeWidth="1.5"
+        />
+
+        {/* Green Leaf Overlay (Hospitality / Sustainability Eco-leaf) */}
+        <path
+          d="M 135,110 C 145,95 160,95 155,115 C 150,125 135,125 135,110 Z"
+          fill="#2E7D32"
+          stroke="#FFFFFF"
+          strokeWidth="1"
+        />
+        <path d="M 135,110 Q 146,111 155,115" stroke="#FFFFFF" strokeWidth="0.8" />
+
+        {/* Tourism Location Pin */}
+        <g transform="translate(82, 70) scale(0.65)">
+          <path
+            d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z"
+            fill="#D32F2F"
+          />
+          <circle cx="12" cy="9" r="3" fill="#FFFFFF" />
+        </g>
+
+        {/* Hospitality Star (5-Point Golden Star) */}
+        <polygon
+          points="100,42 103,49 111,49 104,54 107,61 100,56 93,61 96,54 89,49 97,49"
+          fill="#FFD700"
+          stroke="#D4AF37"
+          strokeWidth="0.8"
+        />
+      </g>
+
+      {/* Decorative Outer Stars */}
+      <polygon points="26,100 28,103 31,103 29,105 30,108 26,106 22,108 23,105 21,103 24,103" fill="#FFD700" />
+      <polygon points="174,100 176,103 179,103 177,105 178,108 174,106 170,108 171,105 169,103 172,103" fill="#FFD700" />
+    </svg>
+  );
+}
