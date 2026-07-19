@@ -1,0 +1,84 @@
+// file: src/app/layout.tsx
+import './globals.css';
+import React from 'react';
+import NehcLogo from '@/components/NehcLogo';
+
+export const metadata = {
+  title: 'North East Hospitality Council (NEHC) - Educational & E-Learning Portal',
+  description: 'Official Student Counselling, Admission Guidance, & Skills E-Learning portal of NEHC.',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+        {/* Government Style Header Bar */}
+        <header className="border-b-4 border-goiOrange bg-[#0A2540] text-white">
+          <div className="bg-goiBlue-dark text-slate-300 py-1 text-xs px-4 flex justify-between max-w-7xl mx-auto">
+            <span>GOVERNMENT OF INDIA REGULATORY STYLE BODY</span>
+            <div className="flex gap-4">
+              <a href="#main" className="hover:underline">Skip to Main Content</a>
+              <span>|</span>
+              <span className="cursor-pointer hover:text-white">A+</span>
+              <span className="cursor-pointer hover:text-white">A</span>
+              <span className="cursor-pointer hover:text-white">A-</span>
+            </div>
+          </div>
+          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <NehcLogo size={75} />
+              <div>
+                <h1 className="text-xl font-extrabold tracking-wide text-white flex items-center gap-2">
+                  NORTH EAST HOSPITALITY COUNCIL
+                </h1>
+                <p className="text-xs text-goiGold font-semibold">An Autonomous Educational Governance Body & Hospitality Network</p>
+                <p className="text-[10px] text-slate-300 italic">Promoting Tourism, E-Learning, and Advanced Training across North Eastern States</p>
+              </div>
+            </div>
+            <div className="hidden md:flex gap-4 text-sm font-medium">
+              <a href="/" className="hover:text-goiGold transition">Home</a>
+              <a href="/notices" className="hover:text-goiGold transition">Circulars</a>
+              <a href="/elearning" className="hover:text-goiGold transition">E-Learning</a>
+              <a href="/partners" className="hover:text-goiGold transition">Partners</a>
+              <a href="/admin" className="px-3 py-1 bg-goiGold text-goiBlue-dark rounded font-semibold text-xs hover:bg-white hover:text-goiBlue transition">
+                Admin Console
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <main id="main" className="flex-grow">
+          {children}
+        </main>
+
+        {/* Official Indian Footings */}
+        <footer className="bg-goiBlue-dark text-white border-t-8 border-goiGold mt-auto py-8">
+          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+            <div>
+              <h3 className="font-bold text-base text-goiGold mb-3 border-b border-slate-700 pb-1">About NEHC</h3>
+              <p className="text-slate-300 text-xs leading-relaxed">
+                The North East Hospitality Council is dedicated to bridging local culinary and management talents with leading luxury industry organizations across Asia and standardizing technical hotel certificates.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-goiGold mb-3 border-b border-slate-700 pb-1">Support & Verification</h3>
+              <ul className="space-y-1 text-slate-300 text-xs">
+                <li>• <a href="/contact" className="hover:underline">Helpdesk Support Services</a></li>
+                <li>• <a href="/verify" className="hover:underline">Validate QR Code Certificate</a></li>
+                <li>• <a href="/careers" className="hover:underline">Affiliated Faculty Recruitment</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-goiGold mb-3 border-b border-slate-700 pb-1">Emergency Queries</h3>
+              <p className="text-xs text-slate-300">Council Secretariat, Guwahati & Agartala, India</p>
+              <p className="text-xs text-goiGold font-mono mt-1">E-mail: debbarmasupriya1000@gmail.com</p>
+            </div>
+          </div>
+          <div className="max-w-7xl mx-auto px-4 mt-8 pt-4 border-t border-slate-800 text-center text-[11px] text-slate-400">
+            &copy; 2026 North East Hospitality Council (NEHC). Designed to mirror administrative Indian regulatory layouts. All Rights Reserved.
+          </div>
+        </footer>
+      </body>
+    </html>
+  );
+}
