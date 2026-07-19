@@ -1,0 +1,27 @@
+// tailwind.config.js
+module.exports = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        goiBlue: {
+          light: '#2E5A88',
+          DEFAULT: '#0A2540',
+          dark: '#031424',
+        },
+        goiGold: {
+          light: '#F4D068',
+          DEFAULT: '#D4AF37',
+          dark: '#A68010',
+        },
+        goiOrange: '#E15A23',
+        goiGreen: '#1b5e20',
+      },
+    },
+  },
+  plugins: [],
+};
