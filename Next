@@ -1,0 +1,91 @@
+// file: src/app/page.tsx
+import React from 'react';
+import NehcLogo from '@/components/NehcLogo';
+import NoticeBoard from '@/components/NoticeBoard';
+import DashboardAnalytics from '@/components/DashboardAnalytics';
+
+const dummyNotices = [
+  {
+    id: '1',
+    title: 'Admission Schedule 2026 for Hospitality Diploma Programs',
+    pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    category: 'CIRCULAR',
+    isPinned: true,
+    isCancelled: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '2',
+    title: 'Cancelled - Special On-Site Culinary Examination for Meghalaya Center',
+    pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    category: 'GENERAL',
+    isPinned: false,
+    isCancelled: true,
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    id: '3',
+    title: 'National Scholarship Scheme for North Eastern Underprivileged Students',
+    pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    category: 'SCHOLARSHIP',
+    isPinned: false,
+    isCancelled: false,
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+];
+
+export default function HomePortal() {
+  return (
+    <div className="space-y-12 pb-16">
+      {/* Official Government Banner */}
+      <section className="bg-gradient-to-r from-goiBlue to-goiBlue-light text-white py-16 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white opacity-5"></div>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 relative z-10">
+          <div className="flex-1 space-y-6">
+            <span className="bg-goiGold text-goiBlue-dark text-xs px-3 py-1 rounded-full font-bold uppercase tracking-widest">
+              OFFICIAL EDUCATION BOARD REGISTRY
+            </span>
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+              Standardizing Professional <br />
+              <span className="text-goiGold">Hospitality & Culinary</span> Training
+            </h1>
+            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+              We empower youth in Assam, Meghalaya, Tripura, Arunachal Pradesh, Manipur, Nagaland, Mizoram, and Sikkim through structured vocational training, career counseling, and verified industry placement options.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href="#circulars" className="px-6 py-2.5 bg-goiGold hover:bg-white hover:text-goiBlue-dark text-goiBlue-dark font-bold text-sm rounded shadow transition">
+                VIEW CURRENT NOTICE CIRCULARS
+              </a>
+              <a href="#dashboard" className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm rounded border border-slate-600 transition">
+                EXAMINE LIVE TELEMETRY
+              </a>
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <NehcLogo size={240} className="hover:scale-105 transition duration-500" />
+          </div>
+        </div>
+      </section>
+
+      {/* Public Circulars Section */}
+      <section id="circulars" className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-black text-goiBlue uppercase tracking-wide">Live Gazette Announcements</h2>
+          <p className="text-xs text-slate-500 mt-1">Official state and board announcements published directly by the Admin Office</p>
+          <div className="w-16 h-1 bg-goiOrange mx-auto mt-3"></div>
+        </div>
+        <NoticeBoard initialNotices={dummyNotices} />
+      </section>
+
+      {/* Operational Transparency Dashboard Section */}
+      <section id="dashboard" className="max-w-7xl mx-auto px-4 bg-slate-100/50 py-10 rounded-xl border border-slate-200">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-black text-goiBlue uppercase tracking-wide">Operational Integrity & Audit Logs</h2>
+          <p className="text-xs text-slate-500 mt-1">Real-time indicators showing administrative compliance, storage status, and user logs</p>
+          <div className="w-16 h-1 bg-goiOrange mx-auto mt-3"></div>
+        </div>
+        <DashboardAnalytics />
+      </section>
+    </div>
+  );
+}
