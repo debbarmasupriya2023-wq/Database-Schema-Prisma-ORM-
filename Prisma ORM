@@ -1,0 +1,194 @@
+// file: prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql" // or "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id           String        @id @default(uuid())
+  email        String        @unique @default("debbarmasupriya1000@gmail.com")
+  passwordHash String
+  name         String        @default("Council Administrator")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  logs         ActivityLog[]
+}
+
+model Course {
+  id           String       @id @default(uuid())
+  title        String
+  thumbnailUrl String
+  description  String       @db.Text
+  outcomes     String       @db.Text // JSON or comma-separated list
+  duration     String       // e.g., "6 Months"
+  isPublished  Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  modules      Module[]
+  assignments  Assignment[]
+  exams        Exam[]
+}
+
+model Module {
+  id           String     @id @default(uuid())
+  courseId     String
+  course       Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title        String
+  type         MediaType  // e.g., PDF, PPT, VIDEO, DOCX, ZIP
+  fileUrl      String
+  contentText  String?    @db.Text
+  orderIndex   Int        @default(0)
+  createdAt    DateTime   @default(now())
+}
+
+enum MediaType {
+  PDF
+  PPT
+  VIDEO
+  DOCX
+  ZIP
+}
+
+model Assignment {
+  id          String                 @id @default(uuid())
+  courseId    String
+  course      Course                 @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title       String
+  description String                 @db.Text
+  pdfUrl      String?
+  deadline    DateTime
+  maxMarks    Int
+  createdAt   DateTime               @default(now())
+  submissions AssignmentSubmission[]
+}
+
+model AssignmentSubmission {
+  id           String           @id @default(uuid())
+  assignmentId String
+  assignment   Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  studentName  String
+  studentEmail String
+  fileUrl      String
+  submittedAt  DateTime         @default(now())
+  marksGiven   Int?
+  remarks      String?
+  status       SubmissionStatus @default(PENDING)
+}
+
+enum SubmissionStatus {
+  PENDING
+  GRADED
+}
+
+model Exam {
+  id                String     @id @default(uuid())
+  courseId          String
+  course            Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title             String
+  durationMinutes   Int
+  passingPercentage Float      @default(50.0)
+  negativeMarking   Float      @default(0.0)
+  isPublished       Boolean    @default(false)
+  questions         Question[]
+  results           Result[]
+}
+
+model Question {
+  id            String       @id @default(uuid())
+  examId        String
+  exam          Exam         @relation(fields: [examId], references: [id], onDelete: Cascade)
+  type          QuestionType
+  text          String       @db.Text
+  options       Json         // Stored as an array of strings
+  correctAnswer Json         // Stored answer keys for verification
+  points        Int          @default(1)
+}
+
+enum QuestionType {
+  MCQ
+  TRUE_FALSE
+  MULTIPLE_ANSWERS
+  MATCH_FOLLOWING
+}
+
+model Result {
+  id           String       @id @default(uuid())
+  examId       String
+  exam         Exam         @relation(fields: [examId], references: [id], onDelete: Cascade)
+  studentName  String
+  studentEmail String
+  scoreObtained Float
+  totalScore   Float
+  passed       Boolean
+  certificate  Certificate?
+  createdAt    DateTime     @default(now())
+}
+
+model Certificate {
+  id              String   @id @default(uuid())
+  resultId        String   @unique
+  result          Result   @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  certificateCode String   @unique // Auto-generated unique string
+  studentName     String
+  courseTitle     String
+  issueDate       DateTime @default(now())
+  signatureUrl    String
+  qrCodeData      String   @db.Text
+}
+
+model Notice {
+  id          String         @id @default(uuid())
+  title       String
+  pdfUrl      String?
+  category    NoticeCategory @default(GENERAL)
+  isPinned    Boolean        @default(false)
+  isArchived  Boolean        @default(false)
+  isCancelled Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+}
+
+enum NoticeCategory {
+  GENERAL
+  CIRCULAR
+  EVENT
+  SCHOLARSHIP
+}
+
+model Partner {
+  id          String      @id @default(uuid())
+  name        String
+  logoUrl     String
+  linkUrl     String?
+  type        PartnerType @default(INDUSTRY)
+  isFeatured  Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+}
+
+enum PartnerType {
+  INDUSTRY
+  ORGANIZATION
+  GOVERNMENT
+  PLACEMENT
+  INTERNSHIP
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  adminId   String?
+  admin     Admin?   @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  action    String
+  details   String?  @db.Text
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+model WebsiteSetting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String @db.Text
+}
