@@ -1,0 +1,100 @@
+// file: components/DashboardAnalytics.tsx
+'use client';
+
+import React from 'react';
+
+export default function DashboardAnalytics() {
+  // Mock administrative metrics
+  const stats = [
+    { label: 'Total Course Enrollment', value: '1,482 Students', change: '+12% this month' },
+    { label: 'Certificates Authenticated', value: '381 Issued', change: 'Fully Tracked via QR' },
+    { label: 'Notice Board Publications', value: '42 Circulars', change: '3 Cancelled Stamps' },
+    { label: 'Server Space Allocated', value: '2.4 GB / 10 GB', change: 'PDF / Media Storage' },
+  ];
+
+  const recentLogs = [
+    { id: 1, action: 'ADMIN_LOGIN', detail: 'Admin session started via debbarmasupriya1000@gmail.com', time: '10 mins ago', ip: '157.23.45.109' },
+    { id: 2, action: 'PUBLISH_NOTICE', detail: 'Notice ID 992-B uploaded successfully: Admission Phase 2', time: '2 hours ago', ip: '157.23.45.109' },
+    { id: 3, action: 'EXAM_CREATED', detail: 'Course hospitality management primary MCQ test set up', time: '1 day ago', ip: '157.23.45.109' },
+  ];
+
+  return (
+    <div className="space-y-6 max-w-7xl mx-auto px-4 py-6">
+      {/* Status Matrix */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {stats.map((stat, idx) => (
+          <div key={idx} className="bg-white border border-slate-200 rounded p-4 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1 h-full bg-goiBlue"></div>
+            <h4 className="text-slate-500 text-xs font-bold uppercase">{stat.label}</h4>
+            <p className="text-2xl font-black text-goiBlue-dark mt-1">{stat.value}</p>
+            <span className="text-[10px] text-goiGreen font-semibold mt-2 block">{stat.change}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Visual Analytics Representation (Pure Tailwind Charts) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Course Popularity Meter */}
+        <div className="bg-white p-5 border border-slate-200 rounded shadow-sm">
+          <h3 className="text-sm font-bold text-goiBlue mb-4 uppercase tracking-wider">Student Engagement Metrics</h3>
+          <div className="space-y-3">
+            {[
+              { name: 'Hotel Housekeeping Fundamentals', percent: 75, color: 'bg-goiBlue' },
+              { name: 'Hospitality & Tourism Culinary Arts', percent: 90, color: 'bg-goiOrange' },
+              { name: 'Customer Service Advanced Diplomas', percent: 55, color: 'bg-goiGold' },
+              { name: 'Front Desk Office Operations', percent: 40, color: 'bg-goiGreen' },
+            ].map((course, idx) => (
+              <div key={idx}>
+                <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                  <span>{course.name}</span>
+                  <span>{course.percent}%</span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2.5">
+                  <div className={`h-2.5 rounded-full ${course.color}`} style={{ width: `${course.percent}%` }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Security Logs & Admin Operations Feed */}
+        <div className="bg-white p-5 border border-slate-200 rounded shadow-sm flex flex-col">
+          <h3 className="text-sm font-bold text-goiBlue mb-4 uppercase tracking-wider">Security Logs & Audit Trails</h3>
+          <div className="space-y-4 flex-grow">
+            {recentLogs.map((log) => (
+              <div key={log.id} className="flex gap-4 text-xs border-b border-slate-100 pb-3 last:border-0">
+                <div className="bg-slate-100 text-slate-800 p-2 rounded font-mono font-bold text-[9px] flex items-center h-fit">
+                  {log.action}
+                </div>
+                <div className="flex-grow">
+                  <p className="text-slate-700 font-medium">{log.detail}</p>
+                  <div className="flex gap-3 text-[10px] text-slate-400 mt-1">
+                    <span>{log.time}</span>
+                    <span>•</span>
+                    <span>IP: {log.ip}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Administration Control Matrix */}
+      <div className="bg-slate-100 border border-slate-200 rounded p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div>
+          <h4 className="text-sm font-bold text-goiBlue">Systems Operations Console</h4>
+          <p className="text-xs text-slate-500">Perform maintenance cycles, trigger safety checkpoints, and database exports.</p>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          <button className="px-4 py-2 bg-goiBlue hover:bg-goiBlue-light text-white font-bold text-xs rounded transition">
+            EXPORT ENTIRE DB BACKUP
+          </button>
+          <button className="px-4 py-2 bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold text-xs rounded transition">
+            CLEAR CACHING
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
