@@ -1,0 +1,21 @@
+// file: routes/auth.ts
+app.post('/api/auth/login', async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    const admin = await prisma.admin.findUnique({ where: { email } });
+    if (!admin) {
+      return res.status(401).json({ error: 'Invalid email or credentials' });
+    }
+    const isMatch = await bcrypt.compare(password, admin.passwordHash);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+    const token = jwt.sign({ adminId: admin.id }, JWT_SECRET, { expiresIn: '12h' });
+    
+    await logAction(admin.id, 'ADMIN_LOGIN', `Logged in from IP: ${req.ip}`, req.ip);
+
+    return res.json({ token, admin: { id: admin.id, email: admin.email, name: admin.name } });
+  } catch (err: any) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
