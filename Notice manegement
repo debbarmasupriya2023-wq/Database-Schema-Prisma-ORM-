@@ -1,0 +1,43 @@
+// file: routes/notices.ts
+app.get('/api/notices', async (req: Request, res: Response) => {
+  const { category, search } = req.query;
+  try {
+    const filters: any = {};
+    if (category) filters.category = category;
+    if (search) {
+      filters.title = { contains: String(search), mode: 'insensitive' };
+    }
+    const notices = await prisma.notice.findMany({
+      where: filters,
+      orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
+    });
+    return res.json(notices);
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch notice data.' });
+  }
+});
+
+app.post('/api/notices', authenticateAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  const { title, pdfUrl, category, isPinned, isCancelled } = req.body;
+  try {
+    const newNotice = await prisma.notice.create({
+      data: { title, pdfUrl, category, isPinned, isCancelled },
+    });
+    await logAction(req.adminId || null, 'CREATE_NOTICE', `Created: ${title}`, req.ip);
+    return res.status(201).json(newNotice);
+  } catch (err) {
+    return res.status(500).json({ error: 'Unable to write notice.' });
+  }
+});
+
+app.patch('/api/notices/:id', authenticateAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  const { id } = req.params;
+  const data = req.body;
+  try {
+    const updated = await prisma.notice.update({ where: { id }, data });
+    await logAction(req.adminId || null, 'UPDATE_NOTICE', `Updated ID: ${id}`, req.ip);
+    return res.json(updated);
+  } catch (err) {
+    return res.status(500).json({ error: 'Modification failed.' });
+  }
+});
