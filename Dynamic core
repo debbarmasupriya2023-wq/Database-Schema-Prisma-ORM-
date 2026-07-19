@@ -1,0 +1,149 @@
+// file: components/ExamEngine.tsx
+'use client';
+
+import React, { useState, useEffect } from 'react';
+
+interface Question {
+  id: string;
+  type: 'MCQ' | 'TRUE_FALSE' | 'MATCH_FOLLOWING';
+  text: string;
+  options: string[];
+}
+
+interface Exam {
+  id: string;
+  title: string;
+  durationMinutes: number;
+  questions: Question[];
+}
+
+export default function ExamEngine({ exam, onSubmitResult }: { exam: Exam; onSubmitResult: (payload: any) => void }) {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [selections, setSelections] = useState<Record<string, string>>({});
+  const [timeLeft, setTimeLeft] = useState(exam.durationMinutes * 60);
+  const [examCompleted, setExamCompleted] = useState(false);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      handleSubmit();
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const selectAnswer = (questionId: string, value: string) => {
+    setSelections((prev) => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleSubmit = () => {
+    setExamCompleted(true);
+    const answersPayload = Object.entries(selections).map(([qid, val]) => ({
+      questionId: qid,
+      selection: val,
+    }));
+    onSubmitResult({ examId: exam.id, answers: answersPayload });
+  };
+
+  const formatTime = (sec: number) => {
+    const mins = Math.floor(sec / 60);
+    const secs = sec % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  if (examCompleted) {
+    return (
+      <div className="p-8 text-center bg-white rounded-lg border-2 border-slate-200 max-w-xl mx-auto shadow-md">
+        <div className="text-goiGreen text-5xl mb-4">✓</div>
+        <h3 className="text-2xl font-bold text-goiBlue">Examination Submitted</h3>
+        <p className="text-slate-600 mt-2">Answers have been locked and sent to the NEHC verification server.</p>
+        <p className="text-xs text-slate-400 mt-4">Generating performance matrix and credentials...</p>
+      </div>
+    );
+  }
+
+  const activeQuestion = exam.questions[currentIdx];
+
+  return (
+    <div className="max-w-3xl mx-auto bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden">
+      {/* Exam Header */}
+      <div className="bg-goiBlue text-white p-4 flex justify-between items-center">
+        <div>
+          <h2 className="text-lg font-bold">{exam.title}</h2>
+          <p className="text-xs text-goiGold">Council Assessment Center</p>
+        </div>
+        <div className="bg-red-800 border border-red-500 rounded px-3 py-1 font-mono text-sm">
+          TIME LEFT: {formatTime(timeLeft)}
+        </div>
+      </div>
+
+      {/* Progress Line */}
+      <div className="w-full bg-slate-200 h-2">
+        <div
+          className="bg-goiGold h-2 transition-all duration-300"
+          style={{ width: `${((currentIdx + 1) / exam.questions.length) * 100}%` }}
+        ></div>
+      </div>
+
+      {/* Question Canvas */}
+      <div className="p-6">
+        <div className="flex justify-between text-xs font-semibold text-slate-500 mb-2">
+          <span>QUESTION {currentIdx + 1} OF {exam.questions.length}</span>
+          <span className="text-goiBlue">{activeQuestion.type}</span>
+        </div>
+
+        <h4 className="text-base font-semibold text-slate-800 mb-6">{activeQuestion.text}</h4>
+
+        <div className="space-y-3">
+          {activeQuestion.options.map((option, oIdx) => (
+            <label
+              key={oIdx}
+              className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50 transition ${
+                selections[activeQuestion.id] === option ? 'border-goiBlue bg-blue-50/50' : 'border-slate-200'
+              }`}
+            >
+              <input
+                type="radio"
+                name={activeQuestion.id}
+                value={option}
+                checked={selections[activeQuestion.id] === option}
+                onChange={() => selectAnswer(activeQuestion.id, option)}
+                className="accent-goiBlue w-4 h-4"
+              />
+              <span className="text-sm text-slate-700">{option}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom Nav Actions */}
+      <div className="bg-slate-50 p-4 border-t border-slate-200 flex justify-between">
+        <button
+          onClick={() => setCurrentIdx((p) => Math.max(0, p - 1))}
+          disabled={currentIdx === 0}
+          className="px-4 py-2 text-xs border border-slate-300 rounded font-bold hover:bg-slate-200 transition disabled:opacity-50"
+        >
+          PREVIOUS
+        </button>
+
+        {currentIdx < exam.questions.length - 1 ? (
+          <button
+            onClick={() => setCurrentIdx((p) => p + 1)}
+            className="px-4 py-2 text-xs bg-goiBlue text-white rounded font-bold hover:bg-goiBlue-light transition"
+          >
+            NEXT QUESTION
+          </button>
+        ) : (
+          <button
+            onClick={handleSubmit}
+            className="px-5 py-2 text-xs bg-goiGreen text-white rounded font-bold hover:bg-green-700 transition"
+          >
+            FINISH & SUBMIT
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
